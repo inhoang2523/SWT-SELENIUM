@@ -4,81 +4,77 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.AssertJUnit;
 
 public class CartPage {
     WebDriver driver;
-    By cartButton = By.xpath("(//button[@title='Add to Cart'])[1]");
-    By countryInputLocator = By.id("country");
-    By stateInputLocator = By.id("region_id");
-    By provinceInputLocator = By.id("region");
-    By zipInputLocator = By.id("postcode");
-    By estimateButton = By.xpath("(//span[contains(text(),'Estimate')])[1]");
-    By flatRate = By.xpath("(//label[contains(text(),'Fixed')])[1]");
-    By flatRateButton = By.xpath("(//input[@id='s_method_flatrate_flatrate'])[1]");
-    By updateTotalButton = By.xpath("(//button[@title='Update Total'])[1]");
-    By subtotalLocator = By.xpath("(//td)[13]");
-    By shippingCostLocator = By.xpath("(//td[@class='a-right'])[6]");
-    By grandTotalLocator = By.xpath("(//td[@class='a-right'])[2]");
+
+    By countryInput = By.id("country");
+    By regionInput = By.id("region_id");
+    By zipInput = By.id("postcode");
+    By estimateLink = By.xpath("//span[contains(text(),'Estimate')]");
+    By shippingCost = By.xpath(".//label[@for='s_method_flatrate_flatrate']");
+    By updateTotalButton = By.xpath("//button[@title='Update Total']");
+    By proceedToCheckoutButton = By.xpath("//li[@class='method-checkout-cart-methods-onepage-bottom']//button[@title='Proceed to Checkout']");
+    By ennterQuanity = By.xpath("//input[@title='Qty']");
+    By updateQuantityButton = By.xpath("//button[@title='Update']//span//span[contains(text(),'Update')]");
+    By discountCode = By.xpath("//input[@id='coupon_code']");
+    By grandtotal = By.cssSelector("strong span[class='price']");
+    By applyDiscountButton = By.xpath("//span[contains(text(),'Apply')]");
     public CartPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void clickCartButton(){
-        driver.findElement(cartButton).click();
-    }
-
-    public void enterCountry(String country){
-        WebElement countryElement = driver.findElement(countryInputLocator);
-        new Select (countryElement).selectByVisibleText(country);
-    }
-
-    public void enterState(String state){
-        WebElement stateElement = driver.findElement(stateInputLocator);
-        new Select (stateElement).selectByVisibleText(state);
-    }
-
-    public void enterProvince(String province){
-        WebElement provinceElement = driver.findElement(provinceInputLocator);
-        provinceElement.clear();
-        provinceElement.sendKeys(province);
-    }
-
-    public void enterZip(String zip){
-        WebElement zipElement = driver.findElement(zipInputLocator);
+    public void enterZip(String zip) {
+        WebElement zipElement = driver.findElement(zipInput);
         zipElement.clear();
         zipElement.sendKeys(zip);
     }
+    public void selectCountry(String country) {
+        WebElement countryDropdown = driver.findElement(countryInput);
+        Select countryOption = new Select(countryDropdown);
+        countryOption.selectByValue(country);
+    }
 
-    public void clickEstimateButton(){
-        driver.findElement(estimateButton).click();
+    public void selectRegion(String region) {
+        WebElement regionDropdown = driver.findElement(regionInput);
+        Select regionOption = new Select(regionDropdown);
+        regionOption.selectByValue(region);
     }
-    public String verifyGenerated() {
-        String checkStr = driver.findElement(flatRate).getText();
-        AssertJUnit.assertEquals("Fixed - $15.00", checkStr);
-        return checkStr;
+
+    public void clickEstimate() {
+        driver.findElement(estimateLink).click();
     }
-    public void clickFlatRateButton() {
-        driver.findElement(flatRateButton).click();
+
+    public void selectShippingCost() {
+        WebElement shippingRadioButton = driver.findElement(shippingCost);
+        shippingRadioButton.click();
     }
-    public void clickUpdateTotalButton() {
+
+    public void clickQuantity(){driver.findElement(ennterQuanity);}
+
+    public  void clickUpdateQuanity() {driver.findElement(updateQuantityButton).click();}
+    public void updateQuantity(String quantity) {
+        WebElement codeElement = driver.findElement(ennterQuanity);
+        codeElement.clear();
+        codeElement.sendKeys(quantity);
+    }
+
+    public void clickUpdateTotal() {
         driver.findElement(updateTotalButton).click();
     }
-    public void verifyTotal() {
-//        double subTotal = Double.parseDouble(driver.findElement(subtotalLocator).getText().substring(1));
-//        double shippingCost = Double.parseDouble(driver.findElement(shippingCostLocator).getText().substring(1));
-//        double grandTotal = Double.parseDouble(driver.findElement(grandTotalLocator).getText().substring(1));
-//        System.out.println("subTotal: $" + subTotal);
-//        System.out.println("shippingCost: $" + shippingCost);
-//        System.out.println("grandTotal: $" +grandTotal);
-//        AssertJUnit.assertEquals(grandTotal,subTotal+shippingCost);
 
-        double subTotal = Double.parseDouble(driver.findElement(subtotalLocator).getText().substring(1).replace(",", ""));
-        double shippingCost = Double.parseDouble(driver.findElement(shippingCostLocator).getText().substring(1).replace(",", ""));
-        double grandTotal = Double.parseDouble(driver.findElement(grandTotalLocator).getText().substring(1).replace(",", ""));
-        System.out.println("subTotal: $" + subTotal);
-        System.out.println("shippingCost: $" + shippingCost);
-        System.out.println("grandTotal: $" + grandTotal);
-        AssertJUnit.assertEquals(grandTotal, subTotal + shippingCost);
+    public void clickProceedToCheckout() {
+        driver.findElement(proceedToCheckoutButton).click();
     }
+
+    public  void enterDiscountCode(String Code){
+        WebElement codeElement = driver.findElement(discountCode);
+        codeElement.clear();
+        codeElement.sendKeys(Code);
+    }
+    public String getGrandTotal(){
+        String price = driver.findElement(By.cssSelector("strong span[class='price']")).getText();
+        return  price;
+    }
+    public  void clickApplyDiscount(){driver.findElement(applyDiscountButton).click();}
 }

@@ -3,84 +3,125 @@ package POM;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class CheckOutPage {
     WebDriver driver;
-    By checkOutButton = By.xpath("(//button[@title='Proceed to Checkout'])[2]");
-    By addressInputLocator = By.id("billing:street1");
-    By cityInputLocator = By.id("billing:city");
-    By provinceInputLocator = By.id("billing:region");
-    By stateInputLocator = By.id("billing:region_id");
-    By zipInputLocator = By.id("billing:postcode");
-    By countryInputLocator = By.id("billing:country_id");
-    By telephoneInputLocator = By.id("billing:telephone");
-    By continueBillInfoButton = By.xpath("(//button[@onclick='billing.save()'])[1]");
-    By editInfo = By.xpath("(//a[@href='#'][normalize-space()='Edit'])[2]");
-    By continueShipInfoButton = By.xpath("(//button[@onclick='shipping.save()'])[1]");
-    By continueShippingButton = By.cssSelector(".button[onclick='shippingMethod.save()']");
-    By moneyOrderButton = By.xpath("(//input[@id='p_method_checkmo'])[1]");
-    By continuePaymentButton = By.xpath("(//button[@onclick='payment.save()'])[1]");
-    By placeOrderButton = By.xpath("(//button[@title='Place Order'])[1]");
+
+    By BillingNewAddress = By.id("billing-address-select");
+    By BillingAddress = By.id("billing:street1");
+    By BillingCity = By.id("billing:city");
+    By Billingregion = By.id("billing:region_id");
+    By Billingzip = By.id("billing:postcode");
+    By Billingtelephone = By.id("billing:telephone");
+
+    By DifferentAddess = By.xpath("//label[@for='billing:use_for_shipping_no']");
+    By BillingContinueBtn = By.xpath("//button[@onclick='billing.save()']//span//span[contains(text(),'Continue')]");
+
+    By ShippingAddress = By.id("shipping:street1");
+    By ShippingCity = By.id("shipping:city");
+    By Shippingregion = By.id("shipping:region_id");
+    By Shippingzip = By.id("shipping:postcode");
+    By Shippingtelephone = By.id("shipping:telephone");
+    By ShippingNewAddress = By.id("shipping-address-select");
+    By ShippingContinueBtn = By.xpath("//button[@onclick='shipping.save()']");
+
+    By ShippingMethodContinueBtn = By.xpath("//button[@onclick='shippingMethod.save()']//span//span[contains(text(),'Continue')]");
+
+    By CheckMoneyOrder = By.xpath("//label[@for='p_method_checkmo']");
+    By PaymentContinueBtn = By.xpath("//button[@onclick='payment.save()']");
+
+    By PlaceOrderBtn = By.xpath("//button[@title='Place Order']");
 
     public CheckOutPage(WebDriver driver) {
         this.driver = driver;
     }
-    public void clickCheckOutButton(){
-        driver.findElement(checkOutButton).click();
-    }
-    public void enterAddress(String address){
-        WebElement addressElement = driver.findElement(addressInputLocator);
+    public void enterBilling(String address, String city, String region, String zip, String telephone) {
+        WebElement addressElement = driver.findElement(BillingAddress);
         addressElement.clear();
         addressElement.sendKeys(address);
-    }
-    public void enterCity(String city){
-        WebElement cityElement = driver.findElement(cityInputLocator);
+
+        WebElement cityElement = driver.findElement(BillingCity);
         cityElement.clear();
         cityElement.sendKeys(city);
-    }
-    public void enterCountry(String country){
-        WebElement countryElement = driver.findElement(countryInputLocator);
-        new Select(countryElement).selectByVisibleText(country);
-    }
-    public void enterState(String state){
-        WebElement stateElement = driver.findElement(stateInputLocator);
-        new Select (stateElement).selectByVisibleText(state);
-    }
-    public void enterProvince(String province){
-        WebElement provinceElement = driver.findElement(provinceInputLocator);
-        provinceElement.clear();
-        provinceElement.sendKeys(province);
-    }
-    public void enterZip(String zip){
-        WebElement zipElement = driver.findElement(zipInputLocator);
+
+        Select regionDropdown = new Select(driver.findElement(Billingregion));
+        regionDropdown.selectByValue(region);
+
+        WebElement zipElement = driver.findElement(Billingzip);
         zipElement.clear();
         zipElement.sendKeys(zip);
-    }
-    public void enterTelephone(String telephone){
-        WebElement telephoneElement = driver.findElement(telephoneInputLocator);
+
+        WebElement telephoneElement = driver.findElement(Billingtelephone);
         telephoneElement.clear();
         telephoneElement.sendKeys(telephone);
     }
-    public void clickContinueBillInfoButton(){
-        driver.findElement(continueBillInfoButton).click();
+    public void BillingNewAddress(){
+        Select NewAddressDropdowm = new Select(driver.findElement(BillingNewAddress));
+        NewAddressDropdowm.selectByVisibleText("New Address");
     }
-    public void clickEditInfo(){
-        driver.findElement(editInfo).click();
+    public void ShippingNewAddress(){
+        Select NewAddressDropdowm = new Select(driver.findElement(ShippingNewAddress));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(2000));
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("shipping-address-select")));
+        element.click();
+        NewAddressDropdowm.selectByVisibleText("New Address");
     }
-    public void clickContinueShipInfoButton(){
-        driver.findElement(continueShipInfoButton).click();
+    public void clickDifferentAddess(){
+        driver.findElement(DifferentAddess).click();
     }
-    public void clickContinueShipButton(){
-        driver.findElement(continueShippingButton).click();
+    public void clickBillingContinue() {
+        WebElement continueButton = driver.findElement(BillingContinueBtn);
+        continueButton.click();
     }
-    public void clickMoneyOrderButton(){
-        driver.findElement(moneyOrderButton).click();
+
+    public void enterShipping(String address, String city, String region, String zip, String telephone) {
+        WebElement addressElement = driver.findElement(ShippingAddress);
+        addressElement.clear();
+        addressElement.sendKeys(address);
+
+        WebElement cityElement = driver.findElement(ShippingCity);
+        cityElement.clear();
+        cityElement.sendKeys(city);
+
+        Select regionDropdown = new Select(driver.findElement(Shippingregion));
+        regionDropdown.selectByValue(region);
+
+        WebElement zipElement = driver.findElement(Shippingzip);
+        zipElement.clear();
+        zipElement.sendKeys(zip);
+
+        WebElement telephoneElement = driver.findElement(Shippingtelephone);
+        telephoneElement.clear();
+        telephoneElement.sendKeys(telephone);
     }
-    public void clickContinuePaymentButton(){
-        driver.findElement(continuePaymentButton).click();
+
+    public void clickShippingContinue() {
+        WebElement continueButton = driver.findElement(ShippingContinueBtn);
+        continueButton.click();
     }
-    public void clickPlaceOrderButton(){
-        driver.findElement(placeOrderButton).click();
+
+    public void clickShippingMethodContinue() {
+        WebElement continueButton = driver.findElement(ShippingMethodContinueBtn);
+        continueButton.click();
+    }
+
+    public void selectCheckMoneyOrderPaymentMethod() {
+        WebElement checkMoneyOrderElement = driver.findElement(CheckMoneyOrder);
+        checkMoneyOrderElement.click();
+    }
+
+    public void clickPaymentContinue() {
+        WebElement continueButton = driver.findElement(PaymentContinueBtn);
+        continueButton.click();
+    }
+
+    public void clickPlaceOrder() {
+        WebElement placeOrderButtonElement = driver.findElement(PlaceOrderBtn);
+        placeOrderButtonElement.click();
     }
 }
